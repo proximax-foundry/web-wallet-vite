@@ -181,25 +181,6 @@ export class WalletUtils {
 
     const namespaces = AppState.namespacesInfo;
 
-    for(let j = 0; j < namespaces.length; ++j){
-      if(namespaces[j].linkType === AliasType.None){
-        if(namespaces[j].linkedId){
-          let tempLinkedId = namespaces[j].linkedId
-          namespaces[j].linkedId = ""
-          for (let i = 0; i < wallet.accounts.length; ++i) {
-            const assetList = wallet.accounts[i].assets;
-            for (let y = 0; y < assetList.length; ++y) {
-              if(assetList[y].idHex === tempLinkedId){
-              const index = assetList[y].namespaceNames.indexOf(namespaces[j].name)
-                if (index > -1) { 
-                  assetList[y].namespaceNames.splice(index, 1); 
-                }
-              }
-            }
-          }
-        }
-      }
-    }
     for (let i = 0; i < wallet.accounts.length; ++i) {
       const assetList = wallet.accounts[i].assets;
 
@@ -208,11 +189,13 @@ export class WalletUtils {
           (x) => x.linkedId === assetList[y].idHex
         );
 
-        if (namespaceAlias.length === 0) {
-          continue;
+        const index = assetList[y].namespaceNames.indexOf('prx.xpx' || 'prx.metx' || 'xarcade.xar')
+        if (index > -1) { 
+          assetList[y].namespaceNames = assetList[y].namespaceNames
         }
-
-        assetList[y].namespaceNames = namespaceAlias.map((x) => x.name);
+        else{
+          assetList[y].namespaceNames = namespaceAlias.map((x) => x.name);
+        }
       }
 
       // let namespace = namespaces.find(x => x.linkedId === wallet.accounts[i].address);
@@ -2248,6 +2231,9 @@ export class WalletUtils {
           : "";
       }
     }
+    else{
+      cachedData.linkedId = "";
+     } 
   }
 
   static namespaceToNamespaceSync(
