@@ -19,7 +19,20 @@
             <div class="inline-block text-xs">{{ $t('general.insufficientBalance') }}</div>
           </div>
           <div class="mt-4" />
+          <div class="flex gap-1">
           <SelectInputAccount v-model="selectedAccAdd" :selectDefault="selectedAccAdd" />
+          <div @click="toggleMultisig = !toggleMultisig"
+              class=' border rounded-md cursor-pointer flex flex-col justify-around p-2 h-16 w-18'>
+              <font-awesome-icon icon="id-card-alt" class=" text-blue-primary ml-auto mr-auto "></font-awesome-icon>
+              <div class='text-xxs text-blue-primary font-semibold uppercase ml-auto mr-auto'>{{ $t('general.select') }}</div>
+              <div class='text-xxs text-blue-primary font-semibold uppercase ml-auto mr-auto'>{{ $t('general.multisig') }}</div>
+            </div>
+          </div>
+          <!-- Pop Up when select icon is clicked -->
+          <Sidebar v-model:visible="toggleMultisig" :baseZIndex="10000" position="full">
+            <SelectAccountAndContact :contacts="contacts" :selectedNode="selectedNode"
+              @node-select="onNodeSelect($event)" />
+          </Sidebar>
           <div v-if="isMultiSigBool" class="text-left mt-2 mb-5 ml-4">
             <div v-if="getWalletCosigner.cosignerList.length > 0">
               <div class="text-tsm">
@@ -46,9 +59,10 @@
             <AddressInputClean :placeholder="$t('transfer.transferPlaceholder')" v-model="recipientInput"
               v-debounce:1000="checkRecipient" :showError="showAddressError" :disabled="disableRecipient" />
             <div @click="toggleContact = !toggleContact"
-              class=' border rounded-md cursor-pointer flex flex-col justify-around p-2 '>
+              class=' border rounded-md cursor-pointer flex flex-col justify-around p-2 h-16 w-18'>
               <font-awesome-icon icon="id-card-alt" class=" text-blue-primary ml-auto mr-auto "></font-awesome-icon>
-              <div class='text-xxs text-blue-primary font-semibold uppercase'>{{ $t('general.select') }}</div>
+              <div class='text-xxs text-blue-primary font-semibold uppercase ml-auto mr-auto'>{{ $t('general.select') }}</div>
+              <div class='text-xxs text-blue-primary font-semibold uppercase ml-auto mr-auto'>{{ $t('general.contact') }}</div>
             </div>
           </div>
           <!-- Pop Up when select icon is clicked -->
@@ -145,6 +159,7 @@ import { TransferUtils } from "@/util/transferUtils"
 const router = useRouter()
 const currentNativeTokenName = computed(() => AppState.nativeToken.label);
 const toggleContact = ref(false)
+const toggleMultisig = ref(false)
 const { t } = useI18n();
 const selectedNodeIndex = ref()
 const internalInstance = getCurrentInstance();

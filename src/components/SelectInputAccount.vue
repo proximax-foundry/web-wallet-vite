@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="w-full">
     <Dropdown
       v-model="selectedAccountInfo"
       :style="{ width: '100%' }"
@@ -12,6 +12,7 @@
         $emit('update:modelValue', $event.value.value);
         $emit('select-account', $event.value.value);
       "
+      class="h-16 mt-0"
     >
       <!-- For the display of the main transfer account information -->
       <template #value="slotProps">
@@ -25,7 +26,7 @@
               >
                 {{ $t("transfer.transferFrom") }}
               </div>
-              <div class="mt-1 text-tsm font-bold">
+              <div class="mt-2 text-base font-bold ">
                 {{ slotProps.value.label }}
               </div>
             </div>
@@ -41,7 +42,7 @@
                 convertImage(slotProps.option.value, 50, jdenticonConfig)
               "
             />
-            <div class="text-xs ml-2 font-semibold">
+            <div class="text-base ml-2 font-semibold">
               {{ slotProps.option.label }}
             </div>
           </div>
@@ -93,12 +94,7 @@ const accounts = computed(() => {
       label: wallet.convertAddressToName(acc.address, true),
     });
   });
-  wallet.others.forEach((account) => {
-    accountList.push({
-      value: account.address,
-      label: wallet.convertAddressToName(account.address, true),
-    });
-  });
+  console.log(wallet)
   return accountList;
 });
 
