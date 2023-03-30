@@ -94,7 +94,12 @@ const accounts = computed(() => {
       label: wallet.convertAddressToName(acc.address, true),
     });
   });
-  console.log(wallet)
+  wallet.others.forEach((account) => {
+    accountList.push({
+      value: account.address,
+      label: wallet.convertAddressToName(account.address, true),
+    });
+  });
   return accountList;
 });
 

@@ -20,18 +20,18 @@
           </div>
           <div class="mt-4" />
           <div class="flex gap-1">
-          <SelectInputAccount v-model="selectedAccAdd" :selectDefault="selectedAccAdd" />
+          <SenderAccount :selectDefaultAddress="selectedAccAdd" :selectDefaultName="selectedAccName"/>
           <div @click="toggleMultisig = !toggleMultisig"
               class=' border rounded-md cursor-pointer flex flex-col justify-around p-2 h-16 w-18'>
               <font-awesome-icon icon="id-card-alt" class=" text-blue-primary ml-auto mr-auto "></font-awesome-icon>
               <div class='text-xxs text-blue-primary font-semibold uppercase ml-auto mr-auto'>{{ $t('general.select') }}</div>
-              <div class='text-xxs text-blue-primary font-semibold uppercase ml-auto mr-auto'>{{ $t('general.multisig') }}</div>
+              <div class='text-xxs text-blue-primary font-semibold uppercase ml-auto mr-auto'>{{ $t('general.account') }}</div>
             </div>
           </div>
           <!-- Pop Up when select icon is clicked -->
           <Sidebar v-model:visible="toggleMultisig" :baseZIndex="10000" position="full">
-            <SelectAccountAndContact :contacts="contacts" :selectedNode="selectedNode"
-              @node-select="onNodeSelect($event)" />
+            <SelectAccountAndMultisig :accounts="selectableAccounts" :selectedNode="selectedNodeSender"
+              @node-select="onNodeSelectSender($event)" />
           </Sidebar>
           <div v-if="isMultiSigBool" class="text-left mt-2 mb-5 ml-4">
             <div v-if="getWalletCosigner.cosignerList.length > 0">
@@ -130,7 +130,6 @@ import { computed, ref, getCurrentInstance, watch } from "vue";
 import PasswordInput from "@/components/PasswordInput.vue";
 import MosaicInput from "@/modules/transfer/components/MosaicInput.vue";
 import TransferTextareaInput from "@/modules/transfer/components/TransferTextareaInput.vue";
-
 import AddContactModal from "@/modules/transfer/components/AddContactModal.vue";
 import ConfirmSendModal from "@/modules/transfer/components/ConfirmSendModal.vue";
 import { useI18n } from 'vue-i18n'
@@ -139,7 +138,6 @@ import { networkState } from "@/state/networkState";
 import { isMultiSig, TransactionUtils, findAccWithAddress, findAcc } from '@/util/transactionUtils';
 import { ChainUtils } from '@/util/chainUtils';
 import { NamespaceUtils } from '@/util/namespaceUtils';
-import SelectInputAccount from "@/components/SelectInputAccount.vue";
 import SelectAccountAndContact from "@/components/SelectAccountAndContact.vue";
 import AddressInputClean from "@/modules/transfer/components/AddressInputClean.vue"
 import TransferInputClean from "@/modules/transfer/components/TransferInputClean.vue"
@@ -153,7 +151,10 @@ import type { WalletAccount } from "@/models/walletAccount";
 import type { TreeNode } from "primevue/tree";
 import type { OtherAccount } from "@/models/otherAccount";
 import type { Asset } from "@/models/asset";
-import { TransferUtils } from "@/util/transferUtils"
+import { TransferUtils } from "@/util/transferUtils";
+import { WalletUtils } from "@/util/walletUtils";
+import SelectAccountAndMultisig from "@/components/SelectAccountAndMultisig.vue";
+import SenderAccount from "../components/SenderAccount.vue";
 
 
 const router = useRouter()
@@ -169,6 +170,7 @@ const showAssetBalanceErr = ref<boolean[]>([])
 const selectContact = ref("0");
 const recipientInput = ref("");
 const selectedNode = ref<TreeNode>({})
+const selectedNodeSender = ref<TreeNode>({})
 const msgOption = ref("regular");
 const messageText = ref("");
 const walletPassword = ref("");
@@ -423,6 +425,13 @@ const onNodeSelect = (node: TreeNode) => {
   node.selectable = false
 }
 
+const onNodeSelectSender = (node: TreeNode) => {
+  toggleMultisig.value = false
+  selectedAccAdd.value = WalletUtils.createAddressFromPublicKey(node.data,AppState.networkType).plain()
+  selectedAccName.value = node.label as string
+  // this is too make it turn blue
+  selectedNodeSender.value[node.key as string] = true
+}
 
 const makeNodeSelectable = () => {
   // if there is previously unselectable value make it selectable
@@ -432,6 +441,46 @@ const makeNodeSelectable = () => {
     selectedNode.value = {}
   }
 }
+
+const selectableAccounts = computed(() => {
+  const wallet = walletState.currentLoggedInWallet;
+  if(!wallet){
+    return []
+  }
+  let accounts = wallet.accounts.map(
+    (acc, accIndex) => {
+      return {
+        name: acc.name,
+        address: acc.address,
+        publicKey: acc.publicKey,
+        multisigInfo: acc.multisigInfo.filter((info) => info.level < 0).map(
+          (info, childIndex) => {
+            return {
+              key: accIndex.toString()+ "-" + childIndex.toString(),
+              label: "MULTISIG-" + WalletUtils.createAddressFromPublicKey(info.publicKey,AppState.networkType).plain().slice(-4),
+              data: info.publicKey,
+              selectable: true
+            }
+          }
+        )
+      }
+    });
+  var selectableAccounts: { key:string, label:string, data:string, selectable:boolean, children: { key: string, label:string, data: string, selectable:boolean}[]}[]=[];
+  var indexNo = 0
+  accounts.forEach((element) => {
+    selectableAccounts.push(
+      {
+        key: indexNo.toString(),
+        label: element.name,
+        data: element.publicKey,
+        selectable: true,
+        children: element.multisigInfo
+      }
+    )
+    indexNo++
+  })
+  return selectableAccounts
+})
 
 const clearInput = () => {
   selectContact.value = "0";
