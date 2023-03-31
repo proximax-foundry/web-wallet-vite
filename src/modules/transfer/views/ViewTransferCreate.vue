@@ -155,6 +155,7 @@ import { TransferUtils } from "@/util/transferUtils";
 import { WalletUtils } from "@/util/walletUtils";
 import SelectAccountAndMultisig from "@/components/SelectAccountAndMultisig.vue";
 import SenderAccount from "../components/SenderAccount.vue";
+import { Sirius } from "@/models/sirius";
 
 
 const router = useRouter()
@@ -254,6 +255,11 @@ const selectedAccName = ref(
 const selectedAccAdd = ref(
   wallet ? (wallet.selectDefaultAccount() as WalletAccount).address : ''
 );
+const selectedAccPublicKey = ref(
+  wallet ? (wallet.selectDefaultAccount() as WalletAccount).publicKey : ''
+);
+
+const mosaicOption = ref<{ val: string, balance: string, label: string, id: number, disabled: boolean }[]>([])
 
 const accounts = computed(() => {
   if (!walletState.currentLoggedInWallet) {
@@ -286,10 +292,9 @@ const accounts = computed(() => {
 });
 const getWalletCosigner = computed(() => {
   if (networkState.currentNetworkProfileConfig) {
-    const findAccount = accounts.value.find(acc => acc.address == selectedAccAdd.value)
-    let cosigners = MultisigUtils.getCosignerInWallet(findAccount ? findAccount.publicKey : '')
+    let cosigners = MultisigUtils.getCosignerInWallet(selectedAccPublicKey.value)
     let list: { publicKey: string, name: string, balance: number, address: string }[] = []
-
+    console.log(cosigners)
     cosigners.cosignerList.forEach(publicKey => {
       const findAccount = findAcc(publicKey)
       if (findAccount) {
@@ -342,16 +347,7 @@ const checkCosignBalance = computed(() => {
   return Helper.toCurrencyFormat(cosignBalance, AppState.nativeToken.divisibility);
 })
 
-const balance = computed(() => {
-  if (walletState.currentLoggedInWallet) {
-    const findAcc = accounts.value.find((element) => element.address === selectedAccAdd.value)
-    if (!findAcc) {
-      return 0
-    }
-    return findAcc.balance
-  }
-  return 0;
-});
+const balance = ref(0)
 
 const contacts = computed(() => {
 
@@ -424,13 +420,30 @@ const onNodeSelect = (node: TreeNode) => {
   selectedNode.value[node.key as string] = true
   node.selectable = false
 }
-
+let scanDistributorAsset = async () => {
+  let assets = await Sirius.scanAsset(selectedAccPublicKey.value);
+  console.log(assets)
+  balance.value = assets[0].amount
+  let assetList = assets.slice(1)
+  mosaicOption.value = assetList.map((asset,index) => {
+    return {
+      val: asset.id,
+      balance: Helper.toCurrencyFormat(asset.amount, asset.divisibility),
+      label: asset.label as string,
+      id: index + 1,
+      disabled: false
+    }
+  })
+}
+scanDistributorAsset()
 const onNodeSelectSender = (node: TreeNode) => {
   toggleMultisig.value = false
   selectedAccAdd.value = WalletUtils.createAddressFromPublicKey(node.data,AppState.networkType).plain()
   selectedAccName.value = node.label as string
+  selectedAccPublicKey.value = node.data
   // this is too make it turn blue
   selectedNodeSender.value[node.key as string] = true
+  scanDistributorAsset()
 }
 
 const makeNodeSelectable = () => {
@@ -481,6 +494,7 @@ const selectableAccounts = computed(() => {
   })
   return selectableAccounts
 })
+console.log(selectableAccounts.value)
 
 const clearInput = () => {
   selectContact.value = "0";
@@ -631,35 +645,7 @@ const disableCreate = computed(() => {
 });
 
 const mosaics = computed(() => {
-  var mosaicOption: { val: string, balance: string, label: string, id: number, disabled: boolean }[] = [];
-  if (!walletState.currentLoggedInWallet) {
-    return mosaicOption;
-  }
-  const account = walletState.currentLoggedInWallet.accounts.find(
-    (element) => element.name == selectedAccName.value
-  ) || walletState.currentLoggedInWallet.others.find(
-    (element) => element.name == selectedAccName.value) as WalletAccount | OtherAccount
-  if (account.assets.length > 0) {
-    let index = 0;
-    for (let asset of account.assets) {
-
-      if (asset.rawAmount === 0) {
-        continue;
-      }
-
-      if (!asset.namespaceNames.includes(AppState.nativeToken.fullNamespace)) {
-        mosaicOption.push({
-          val: asset.idHex,
-          balance: t('general.balance') + ":" + Helper.toCurrencyFormat(asset.amount, asset.divisibility ?? 0),
-          label: (asset.namespaceNames.length > 0 ? asset.namespaceNames[0] : asset.idHex),
-          id: index + 1,
-          disabled: false
-        });
-        index += 1;
-      }
-    }
-  }
-  return mosaicOption;
+  return mosaicOption.value;
 });
 for (let i = 0; i < mosaics.value.length; i++) {
   showAssetBalanceErr.value.push(false)
