@@ -2437,7 +2437,12 @@ export class WalletUtils {
         );
       }
 
-      let loadedNamespaceInfo = await Promise.all(namespacePromises);
+      let loadedNamespaceInfo = await Promise.all(namespacePromises).then((value)=>{
+        return value
+      }).catch((e)=>{
+        console.log(e)
+        return []
+      })
 
       const firstAssetInfo = new AssetInfo(
         assetId.toHex(),
@@ -2468,7 +2473,7 @@ export class WalletUtils {
       }
 
       AppState.namespacesInfo.push(nativeTokenNamespace);
-
+      if(loadedNamespaceInfo.length!==0){
       for(let i = 0; i < loadedNamespaceInfo.length; ++i){
 
         let linkedId: string;
@@ -2499,6 +2504,7 @@ export class WalletUtils {
 
         AppState.namespacesInfo.push(tokenNamespace);
       }
+    }
 
       await WalletUtils.updateWalletMultisigInfo(wallet);
       WalletUtils.populateOtherAccountTypeMultisig(wallet);
