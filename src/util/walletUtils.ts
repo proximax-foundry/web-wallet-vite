@@ -2500,6 +2500,7 @@ export class WalletUtils {
         AppState.namespacesInfo.push(tokenNamespace);
       }
 
+      WalletUtils.checkDuplicateNamespace()
       await WalletUtils.updateWalletMultisigInfo(wallet);
       WalletUtils.populateOtherAccountTypeMultisig(wallet);
       await WalletUtils.updateWalletOtherAccountMultisigInfo(wallet);
