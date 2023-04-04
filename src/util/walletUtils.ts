@@ -2467,7 +2467,9 @@ export class WalletUtils {
         parentId: nativeAssetNamespaceInfo.isSubnamespace() ? nativeAssetNamespaceInfo.parentNamespaceId().toHex(): ""
       }
 
-      AppState.namespacesInfo.push(nativeTokenNamespace);
+      if(!AppState.namespacesInfo.find((x)=> x.name === nativeTokenNamespace.name)){
+        AppState.namespacesInfo.push(nativeTokenNamespace);
+      }
 
       for(let i = 0; i < loadedNamespaceInfo.length; ++i){
 
@@ -2497,10 +2499,11 @@ export class WalletUtils {
           parentId: loadedNamespaceInfo[i].isSubnamespace() ? loadedNamespaceInfo[i].parentNamespaceId().toHex(): ""
         }
 
-        AppState.namespacesInfo.push(tokenNamespace);
+        if(!AppState.namespacesInfo.find((x)=> x.name === tokenNamespace.name)){
+          AppState.namespacesInfo.push(tokenNamespace);
+        }
       }
 
-      WalletUtils.checkDuplicateNamespace()
       await WalletUtils.updateWalletMultisigInfo(wallet);
       WalletUtils.populateOtherAccountTypeMultisig(wallet);
       await WalletUtils.updateWalletOtherAccountMultisigInfo(wallet);
