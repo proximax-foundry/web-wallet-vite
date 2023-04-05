@@ -28,6 +28,7 @@
             <div class=" error error_box mb-5" v-if="err != ''">{{ err }}</div>
           </div>
           <div class="mt-4"></div>
+
           <div class="flex flex-col gap-2">
             <div v-for="(publicKey, index) in cosignaturies" :key="index">
               <div class="flex">
@@ -42,6 +43,7 @@
               </div>
             </div>
           </div>
+
           <div class="flex flex-col gap-2 mt-2">
             <div v-for="(coSignAddress, index) in coSign" :key="index">
               <div class="flex">
@@ -151,6 +153,8 @@ import type { WalletAccount } from '@/models/walletAccount';
 import type { OtherAccount } from '@/models/otherAccount';
 import type { TreeNode } from 'primevue/tree';
 
+
+
 const p = defineProps({
   address: {
     type: String,
@@ -161,9 +165,11 @@ const { t } = useI18n();
 const router = useRouter();
 const err = ref('');
 const fundStatus = ref(false);
+
 const passwd = ref('');
 const passwdPattern = "^[^ ]{8,}$";
 const publicKeyPattern = "^[0-9A-Fa-f]{64}$";
+
 const coSign = ref<string[]>([]);
 const removeCosign = ref<string[]>([]);
 const selectedAddresses = ref([]);
@@ -231,8 +237,15 @@ const cosignaturies = computed(() => {
   return cosignaturies
 })
 
+
+
 const numApproveTransaction = ref( 0);
 const numDeleteUser = ref( 0);
+
+
+
+
+
 
 const cosignerName = computed(() => {
   if (!wallet) {
@@ -262,6 +275,8 @@ const getCosignerList = () => {
   }
   return MultisigUtils.getCosignerInWallet(acc.value.publicKey)
 }
+
+
 
 const walletCosignerList = computed(() => {
   let cosigners = getCosignerList()
@@ -352,8 +367,10 @@ const clear = () => {
 };
 
 
+
 const modifyAccount = async () => {
   let signer: { address: string }[] = [];
+
   cosigners.value.cosignerList.forEach((publicKey: string) => {
     if (!walletState.currentLoggedInWallet) {
       return
@@ -429,11 +446,13 @@ watch(() => [...showAddressError.value], (n) => {
   if (n.every(value => value == false)) {
     updateAggregateFee()
   }
+
 }, { deep: true });
 
 watch(() => [removeCosign.value], (n) => {
   updateAggregateFee()
 }, { deep: true });
+
 
 
 const contact = computed(() => {
@@ -680,6 +699,8 @@ const cosigners = computed(() => {
   return cosigner;
 });
 
+
+
 watch(networkState,n=>{
   if(n.currentNetworkProfile && acc.value){
     MultisigUtils.onPartial(PublicAccount.createFromPublicKey(acc.value.publicKey, AppState.networkType)).then(onPartialBoolean => onPartial.value = onPartialBoolean)
@@ -708,11 +729,15 @@ const totalFeeFormatted = computed(() => {
   return Helper.amountFormatterSimple(totalFee.value, 0);
 });
 
+
+
 const checkCosignBalance = computed(() => {
   const findAccount = findAcc(selectedCosignPublicKey.value)
   let cosignBalance = findAccount ? findAccount.balance : 0;
   return Helper.toCurrencyFormat(cosignBalance, 3);
 })
+
+
 
 </script>
 <style scoped lang="scss">
@@ -765,4 +790,26 @@ input::-webkit-inner-spin-button {
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
-}</style>
+}
+.p-tree::v-deep{
+  .p-tree-container .p-treenode .p-treenode-content{
+    padding-left:2px;
+    padding-top:2px
+  }
+  .p-link{
+  padding: 0;
+  margin: 0;
+  }
+  .p-inputtext{
+      font-size: 1rem;
+      text-align: left;
+      padding: 0.5rem;
+      border: 1px solid #ced4da;
+    }
+}
+  ::v-deep(.p-inputtext) {
+      font-size: 1rem;
+      text-align: left;
+      padding: 0.5rem;
+    }
+</style>
