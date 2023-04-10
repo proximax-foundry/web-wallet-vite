@@ -31,6 +31,7 @@ interface TxnCosignLog {
   statusMsg: string;
   relatedAddress: string[];
   checkedNum: number;
+  multisigPubKey: string;
 }
 
 interface TxnSwapLog {

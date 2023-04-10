@@ -71,7 +71,7 @@ export class TransactionAPI {
   }
 
   announceAggregateBondedCosignature(
-    cosignatureSignedTransaction: CosignatureSignedTransaction
+    cosignatureSignedTransaction: CosignatureSignedTransaction, PublicKey: string
   ): Promise<TransactionAnnounceResponse> {
     const txnHash = cosignatureSignedTransaction.parentHash;
 
@@ -83,6 +83,7 @@ export class TransactionAPI {
         accPubKey: [cosignatureSignedTransaction.signer],
         announced: true,
         relatedAddress: [],
+        multisigPubKey: PublicKey,
         txnHash: txnHash,
         status: "",
         statusMsg: "",

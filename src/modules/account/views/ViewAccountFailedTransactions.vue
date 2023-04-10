@@ -28,6 +28,7 @@ import FailedTxnDT from '@/modules/dashboard/components/TransactionDataTable/Fai
 import { AppState } from "@/state/appState";
 import AccountTabs from "@/modules/account/components/AccountTabs.vue";
 import type { TransactionStatus } from "tsjs-xpx-chain-sdk";
+import { walletState } from "@/state/walletState";
 
 defineProps({
     address: {
@@ -47,15 +48,23 @@ const checkTxnStatus = async () => {
     if (!AppState.chainAPI) {
         return;
     }
-    let endStatuses = "failed";
+    if(!walletState.currentLoggedInWallet){
+        return
+    }
+    const currentAccount = walletState.currentLoggedInWallet.accounts.find((walletAccount) => walletAccount.default === true)
+
+    const currentAccountPubKey = currentAccount? currentAccount.publicKey: ""
+
+    let endStatuses = ["failed", currentAccountPubKey];
+
     let txnsHash1 = AppState.txnActivityLog
-        .filter((x) => endStatuses.includes(x.status))
+        .filter((x) => endStatuses.includes(x.status) && endStatuses.includes(x.accPubKey))
         .map((x) => x.txnHash);
     let txnsHash2 = AppState.txnCosignLog
-        .filter((x) => endStatuses.includes(x.status))
+        .filter((x) => endStatuses.includes(x.status) && x.accPubKey.includes(currentAccountPubKey) || x.multisigPubKey.includes(currentAccountPubKey))
         .map((x) => x.txnHash);
     let txnsHash3 = AppState.txnSwapLog
-        .filter((x) => endStatuses.includes(x.status))
+        .filter((x) => endStatuses.includes(x.status) && endStatuses.includes(x.accPubKey))
         .map((x) => x.txnHash);
     let allTransasctionHash = txnsHash1.concat(txnsHash2, txnsHash3);
 

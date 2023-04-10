@@ -502,7 +502,11 @@ const signAggTxn = async(pswd: string) => {
     const account = Account.createFromPrivateKey(privateKey, AppState.networkType);
     let abt = TransactionUtils.castToAggregate(aggregateTxn)
     let signedTxn = TransactionUtils.cosignTransaction(abt, account);
-    await AppState.chainAPI.transactionAPI.announceAggregateBondedCosignature(signedTxn);
+    let innerTransactionsPubKey = ""
+    innerTransactionsSimple.value.forEach((value) => {
+      innerTransactionsPubKey = value.PublicKey
+    });
+    await AppState.chainAPI.transactionAPI.announceAggregateBondedCosignature(signedTxn, innerTransactionsPubKey);
     router.push({ name: 'ViewAccountPendingTransactions', params: { address: currentAccount.value.address } });
   }
   else {
