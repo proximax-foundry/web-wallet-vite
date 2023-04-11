@@ -318,7 +318,9 @@ const createAsset = () => {
   }
   if (ownerPublicAccount.value) {
     if (cosigner.value) {
-      AssetsUtils.createAssetMultiSig(cosigner.value, walletPassword.value, ownerPublicAccount.value, Number(supply.value), isMutable.value, isTransferable.value, Number(divisibility.value));
+      const currentAccount = walletState.currentLoggedInWallet.accounts.find((walletAccount) => walletAccount.default === true)
+      const currentAccountPubKey = currentAccount? currentAccount.publicKey: ""
+      AssetsUtils.createAssetMultiSig(cosigner.value, walletPassword.value, ownerPublicAccount.value, Number(supply.value), isMutable.value, isTransferable.value, Number(divisibility.value), currentAccountPubKey);
     } else {
       AssetsUtils.createAsset(selectedAccAdd.value, walletPassword.value, ownerPublicAccount.value, Number(supply.value), isMutable.value, isTransferable.value, Number(divisibility.value));
     }

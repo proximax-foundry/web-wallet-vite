@@ -346,10 +346,12 @@ const createNamespace = () => {
   }
   if (cosigner.value) {
     // for multisig
+    const currentAccount = walletState.currentLoggedInWallet.accounts.find((walletAccount) => walletAccount.default === true)
+    const currentAccountPubKey = currentAccount? currentAccount.publicKey: ""
     if (selectNamespace.value === '1') {
-      NamespaceUtils.createRootNamespaceMultisig(cosigner.value, walletPassword.value, namespaceName.value, parseFloat(duration.value), selectedAccAdd.value);
+      NamespaceUtils.createRootNamespaceMultisig(cosigner.value, walletPassword.value, namespaceName.value, parseFloat(duration.value), selectedAccAdd.value, currentAccountPubKey);
     } else {
-      NamespaceUtils.createSubNamespaceMultisig(cosigner.value, walletPassword.value, namespaceName.value, selectNamespace.value, selectedAccAdd.value);
+      NamespaceUtils.createSubNamespaceMultisig(cosigner.value, walletPassword.value, namespaceName.value, selectNamespace.value, selectedAccAdd.value, currentAccountPubKey);
     }
   } else {
     if (selectNamespace.value === '1') {

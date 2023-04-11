@@ -58,6 +58,7 @@ export class AutoAnnounceSignedTransaction {
   confirmAnnounced: boolean = false;
   announced: boolean = false;
   checkCount: number = 0;
+  accPublicKey: string = "";
 
   constructor(signedTx: SignedTransaction) {
     this.signedTransaction = signedTx;

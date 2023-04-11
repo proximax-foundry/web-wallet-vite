@@ -639,11 +639,11 @@ export class ListenerStateUtils {
       if (letAnnouce) {
         if (currentAutoAnnounceTx.type === AnnounceType.NORMAL) {
           chainAPICall.value.transactionAPI.announce(
-            currentAutoAnnounceTx.signedTransaction
+            currentAutoAnnounceTx.signedTransaction, currentAutoAnnounceTx.accPublicKey
           );
         } else {
           chainAPICall.value.transactionAPI.announceAggregateBonded(
-            currentAutoAnnounceTx.signedTransaction
+            currentAutoAnnounceTx.signedTransaction, currentAutoAnnounceTx.accPublicKey
           );
         }
 

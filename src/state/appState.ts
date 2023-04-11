@@ -21,6 +21,7 @@ interface TxnActivityLog {
   statusMsg: string;
   relatedAddress: string[];
   checkedNum: number;
+  accAnnoucePublicKey: string;
 }
 
 interface TxnCosignLog {
@@ -31,7 +32,6 @@ interface TxnCosignLog {
   statusMsg: string;
   relatedAddress: string[];
   checkedNum: number;
-  multisigPubKey: string;
 }
 
 interface TxnSwapLog {

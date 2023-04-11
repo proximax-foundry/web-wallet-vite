@@ -535,7 +535,9 @@ const updateMetadata = () => {
   if (targetAccIsMultisig.value) {
     let lockHashTx = TransactionUtils.lockFundTx(signedAggregateTransaction)
     let signedLockHashTransaction = signerAcc.sign(lockHashTx, networkState.currentNetworkProfile.generationHash);
-    TransactionUtils.announceLF_AND_addAutoAnnounceABT(signedLockHashTransaction, signedAggregateTransaction)
+    const currentAccount = walletState.currentLoggedInWallet.accounts.find((walletAccount) => walletAccount.default === true)
+    const currentAccountPubKey = currentAccount? currentAccount.publicKey: ""
+    TransactionUtils.announceLF_AND_addAutoAnnounceABT(signedLockHashTransaction, signedAggregateTransaction, currentAccountPubKey)
   } else {
     TransactionUtils.announceTransaction(signedAggregateTransaction)
   }

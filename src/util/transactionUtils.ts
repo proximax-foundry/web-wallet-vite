@@ -281,7 +281,7 @@ export class TransactionUtils {
     if (!AppState.chainAPI) {
       throw new Error("Service unavailable");
     }
-    return AppState.chainAPI.transactionAPI.announce(signedTx);
+    return AppState.chainAPI.transactionAPI.announce(signedTx, signedTx.signer);
   }
 
   static announceBondedTransaction(
@@ -290,7 +290,7 @@ export class TransactionUtils {
     if (!AppState.chainAPI) {
       throw new Error("Service unavailable");
     }
-    return AppState.chainAPI.transactionAPI.announceAggregateBonded(signedTx);
+    return AppState.chainAPI.transactionAPI.announceAggregateBonded(signedTx, signedTx.signer);
   }
 
   static announceCosignatureSignedTransaction(
@@ -437,7 +437,8 @@ export class TransactionUtils {
 
   static announceLF_AND_addAutoAnnounceABT(
     lockFundTxSigned: SignedTransaction,
-    signedAggregateBondedTx: SignedTransaction
+    signedAggregateBondedTx: SignedTransaction,
+    multisigAccountPublicKey: string
   ): void {
     if (!AppState.chainAPI) {
       throw new Error("Service unavailable");
@@ -450,7 +451,8 @@ export class TransactionUtils {
     );
     autoAnnounceSignedTx.hashAnnounceBlock.annouceAfterBlockNum = 1;
     autoAnnounceSignedTx.type = AnnounceType.BONDED;
-    AppState.chainAPI.transactionAPI.announce(lockFundTxSigned);
+    autoAnnounceSignedTx.accPublicKey = multisigAccountPublicKey
+    AppState.chainAPI.transactionAPI.announce(lockFundTxSigned, autoAnnounceSignedTx.accPublicKey);
     ListenerStateUtils.addAutoAnnounceSignedTransaction(autoAnnounceSignedTx);
     AppState.isPendingTxnAnnounce = true;
   }

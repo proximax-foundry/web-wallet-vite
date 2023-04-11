@@ -341,7 +341,8 @@ export class NamespaceUtils {
     walletPassword: string,
     namespaceName: string,
     duration: number,
-    multiSigAddress: string
+    multiSigAddress: string,
+    accountPublicKey: string
   ): void => {
     const wallet = walletState.currentLoggedInWallet;
     if (!wallet) {
@@ -392,7 +393,8 @@ export class NamespaceUtils {
     );
     TransactionUtils.announceLF_AND_addAutoAnnounceABT(
       signedHashlock,
-      aggregateBondedTxSigned
+      aggregateBondedTxSigned,
+      accountPublicKey
     );
   };
 
@@ -401,7 +403,8 @@ export class NamespaceUtils {
     walletPassword: string,
     subNamespace: string,
     rootNamespace: string,
-    multiSigAddress: string
+    multiSigAddress: string,
+    accountPublicKey: string
   ): void => {
     const wallet = walletState.currentLoggedInWallet;
     if (!wallet) {
@@ -452,7 +455,8 @@ export class NamespaceUtils {
     );
     TransactionUtils.announceLF_AND_addAutoAnnounceABT(
       signedHashlock,
-      aggregateBondedTxSigned
+      aggregateBondedTxSigned,
+      accountPublicKey
     );
   };
 
@@ -485,7 +489,8 @@ export class NamespaceUtils {
     walletPassword: string,
     namespaceName: string,
     duration: number,
-    multiSigAddress: string
+    multiSigAddress: string,
+    accountPublicKey: string
   ): void => {
     const wallet = walletState.currentLoggedInWallet;
     if (!wallet) {
@@ -535,7 +540,8 @@ export class NamespaceUtils {
     );
     TransactionUtils.announceLF_AND_addAutoAnnounceABT(
       signedHashlock,
-      aggregateBondedTxSigned
+      aggregateBondedTxSigned,
+      accountPublicKey
     );
   };
 }

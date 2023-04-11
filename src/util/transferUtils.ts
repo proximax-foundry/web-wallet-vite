@@ -42,7 +42,8 @@ export class TransferUtils {
     walletPassword: string,
     senderAccAddress: string,
     selectedCosigner: string,
-    encryptedMsg: string
+    encryptedMsg: string,
+    accountPublicKey: string
   ): Promise<boolean> => {
     // verify password
     const transactionBuilder = AppState.buildTxn;
@@ -190,7 +191,8 @@ export class TransferUtils {
       );
       TransactionUtils.announceLF_AND_addAutoAnnounceABT(
         hashLockTransactionSigned,
-        aggregateBondedTransactionSigned
+        aggregateBondedTransactionSigned,
+        accountPublicKey
       );
     }
   

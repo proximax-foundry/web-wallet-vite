@@ -375,6 +375,7 @@ export class AssetsUtils {
     supplyMutable: boolean,
     transferable: boolean,
     divisibility: number,
+    accountPublicKey: string,
     durationInDays?: number
   ): void => {
     if (!AppState.buildTxn || !networkState.currentNetworkProfile) {
@@ -416,7 +417,8 @@ export class AssetsUtils {
     );
     TransactionUtils.announceLF_AND_addAutoAnnounceABT(
       signedHashlock,
-      aggregateBondedTxSigned
+      aggregateBondedTxSigned,
+      accountPublicKey
     );
   };
 
@@ -456,7 +458,8 @@ export class AssetsUtils {
     changeType: string,
     supply: number,
     divisibility: number,
-    multiSigAddress: string
+    multiSigAddress: string,
+    accountPublicKey: string
   ): boolean => {
     const wallet = walletState.currentLoggedInWallet;
     if (!wallet || !AppState.buildTxn || !networkState.currentNetworkProfile) {
@@ -508,7 +511,8 @@ export class AssetsUtils {
     );
     TransactionUtils.announceLF_AND_addAutoAnnounceABT(
       signedHashlock,
-      aggregateBondedTxSigned
+      aggregateBondedTxSigned,
+      accountPublicKey
     );
     return true;
   };
@@ -545,7 +549,8 @@ export class AssetsUtils {
     mosaicIdString: string,
     namespaceString: string,
     linkType: string,
-    multiSigAddress: string
+    multiSigAddress: string,
+    accountPublicKey: string
   ): void => {
     const wallet = walletState.currentLoggedInWallet;
     if (!wallet || !AppState.buildTxn || !networkState.currentNetworkProfile) {
@@ -592,7 +597,8 @@ export class AssetsUtils {
     );
     TransactionUtils.announceLF_AND_addAutoAnnounceABT(
       signedHashlock,
-      aggregateBondedTxSigned
+      aggregateBondedTxSigned,
+      accountPublicKey
     );
   };
 

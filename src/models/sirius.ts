@@ -315,7 +315,7 @@ export class Sirius {
     let allABTAnnounced = false;
 
     for (let i = 0; i < signedHashLockTxns.length; ++i) {
-      await AppState.chainAPI!.transactionAPI.announce(signedHashLockTxns[i]);
+      await AppState.chainAPI!.transactionAPI.announce(signedHashLockTxns[i], account.publicKey);
     }
 
     console.log("All LockHash Txn announced, pending ABT announcement...");
@@ -351,7 +351,7 @@ export class Sirius {
 
           if (blockHeight >= blockConfirmation!.block + 1) {
             await AppState.chainAPI!.transactionAPI.announceAggregateBonded(
-              transactionWaiting[i]
+              transactionWaiting[i], account.publicKey
             );
             announcedABTsHash.push(transactionWaiting[i].hash);
           }

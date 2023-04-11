@@ -23,7 +23,7 @@ export class TransactionAPI {
   }
 
   announce(
-    signedTransaction: SignedTransaction
+    signedTransaction: SignedTransaction, PublicKey: string
   ): Promise<TransactionAnnounceResponse> {
     const txnHash = signedTransaction.hash;
 
@@ -32,6 +32,7 @@ export class TransactionAPI {
         accPubKey: signedTransaction.signer,
         announced: true,
         relatedAddress: [],
+        accAnnoucePublicKey: PublicKey,
         txnHash: txnHash,
         status: "",
         statusMsg: "",
@@ -47,7 +48,7 @@ export class TransactionAPI {
   }
 
   announceAggregateBonded(
-    signedTransaction: SignedTransaction
+    signedTransaction: SignedTransaction, PublicKey: string
   ): Promise<TransactionAnnounceResponse> {
     const txnHash = signedTransaction.hash;
 
@@ -56,6 +57,7 @@ export class TransactionAPI {
         accPubKey: signedTransaction.signer,
         announced: true,
         relatedAddress: [],
+        accAnnoucePublicKey: PublicKey,
         txnHash: txnHash,
         status: "",
         statusMsg: "",
@@ -71,7 +73,7 @@ export class TransactionAPI {
   }
 
   announceAggregateBondedCosignature(
-    cosignatureSignedTransaction: CosignatureSignedTransaction, PublicKey: string
+    cosignatureSignedTransaction: CosignatureSignedTransaction
   ): Promise<TransactionAnnounceResponse> {
     const txnHash = cosignatureSignedTransaction.parentHash;
 
@@ -83,7 +85,6 @@ export class TransactionAPI {
         accPubKey: [cosignatureSignedTransaction.signer],
         announced: true,
         relatedAddress: [],
-        multisigPubKey: PublicKey,
         txnHash: txnHash,
         status: "",
         statusMsg: "",

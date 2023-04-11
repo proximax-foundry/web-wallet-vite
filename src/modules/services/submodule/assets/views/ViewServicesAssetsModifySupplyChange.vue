@@ -378,7 +378,9 @@ const modifyAsset = () => {
     return
   }
   if (cosigner.value) {
-    AssetsUtils.changeAssetSupplyMultiSig(cosigner.value, walletPassword.value, selectAsset.value, selectIncreaseDecrease.value, Number(supply.value), Number(assetDivisibility.value), selectedAccAdd.value);
+    const currentAccount = walletState.currentLoggedInWallet.accounts.find((walletAccount) => walletAccount.default === true)
+    const currentAccountPubKey = currentAccount? currentAccount.publicKey: ""
+    AssetsUtils.changeAssetSupplyMultiSig(cosigner.value, walletPassword.value, selectAsset.value, selectIncreaseDecrease.value, Number(supply.value), Number(assetDivisibility.value), selectedAccAdd.value, currentAccountPubKey);
   } else {
     AssetsUtils.changeAssetSupply(selectedAccAdd.value, walletPassword.value, selectAsset.value, selectIncreaseDecrease.value, Number(supply.value), Number(assetDivisibility.value));
   }
