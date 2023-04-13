@@ -439,9 +439,6 @@ const makeTransfer = async () => {
   if (!wallet) {
     return
   }
-  if(!walletState.currentLoggedInWallet){
-    return
-  }
   if (sendXPX.value == "0" && !forceSend.value) {
     toggleConfirm.value = true;
   } else {
@@ -460,9 +457,6 @@ const makeTransfer = async () => {
       }
     }
 
-    const currentAccount = walletState.currentLoggedInWallet.accounts.find((walletAccount) => walletAccount.default === true)
-    const currentAccountPubKey = currentAccount? currentAccount.publicKey: ""
-
     let transferStatus = await TransferUtils.createTransaction(
       recipientInput.value.toUpperCase(),
       sendXPX.value,
@@ -472,8 +466,7 @@ const makeTransfer = async () => {
       walletPassword.value,
       selectedAccAdd.value,
       selectedCosign,
-      encryptedMsg.value,
-      currentAccountPubKey
+      encryptedMsg.value
     );
     if (!transferStatus) {
       err.value = t('general.walletPasswordInvalid', { name: walletState.currentLoggedInWallet?.name });

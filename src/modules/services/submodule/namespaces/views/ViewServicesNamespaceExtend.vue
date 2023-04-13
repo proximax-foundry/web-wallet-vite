@@ -320,9 +320,7 @@ const extendNamespace = () => {
     return
   }
   if (cosigner.value) {
-    const currentAccount = walletState.currentLoggedInWallet.accounts.find((walletAccount) => walletAccount.default === true)
-    const currentAccountPubKey = currentAccount? currentAccount.publicKey: ""
-    NamespaceUtils.extendNamespaceMultisig(cosigner.value, walletPassword.value, selectNamespace.value, parseFloat(duration.value), selectedAccAdd.value, currentAccountPubKey);
+    NamespaceUtils.extendNamespaceMultisig(cosigner.value, walletPassword.value, selectNamespace.value, parseFloat(duration.value), selectedAccAdd.value);
   } else {
     NamespaceUtils.extendNamespace(selectedAccAdd.value, walletPassword.value, selectNamespace.value, parseFloat(duration.value));
   }

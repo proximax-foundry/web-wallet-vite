@@ -379,7 +379,7 @@ export class ChainUtils {
       ChainUtils.buildAPIEndpoint(currentEndPoint.value, connectionPort.value)
     );
 
-    chainRESTCall.transactionAPI.announce(signedTx, signedTx.signer);
+    chainRESTCall.transactionAPI.announce(signedTx);
   }
 
   static announceBondedTransaction(signedTx: SignedTransaction): void {
@@ -391,7 +391,7 @@ export class ChainUtils {
       ChainUtils.buildAPIEndpoint(currentEndPoint.value, connectionPort.value)
     );
 
-    chainRESTCall.transactionAPI.announceAggregateBonded(signedTx, signedTx.signer);
+    chainRESTCall.transactionAPI.announceAggregateBonded(signedTx);
   }
 
   static announceCosignTransaction(

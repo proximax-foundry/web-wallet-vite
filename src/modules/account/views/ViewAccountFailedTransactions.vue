@@ -58,7 +58,7 @@ const checkTxnStatus = async () => {
     let endStatuses = ["failed", currentAccountPubKey];
 
     let txnsHash1 = AppState.txnActivityLog
-        .filter((x) => endStatuses.includes(x.status) && endStatuses.includes(x.accPubKey) || endStatuses.includes(x.accAnnoucePublicKey))
+        .filter((x) => endStatuses.includes(x.status) && endStatuses.includes(x.accPubKey))
         .map((x) => x.txnHash);
     let txnsHash2 = AppState.txnCosignLog
         .filter((x) => endStatuses.includes(x.status) && x.accPubKey.includes(currentAccountPubKey))

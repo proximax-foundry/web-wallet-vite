@@ -323,9 +323,7 @@ const linkNamespace = () => {
     assetId = accountAssetId ? accountAssetId.linkedId : "";
   }
   if (cosigner.value) {
-    const currentAccount = walletState.currentLoggedInWallet.accounts.find((walletAccount) => walletAccount.default === true)
-    const currentAccountPubKey = currentAccount? currentAccount.publicKey: ""
-    AssetsUtils.linkedNamespaceToAssetMultiSig(cosigner.value, walletPassword.value, assetId, selectNamespace.value, selectAction.value, selectedAccAdd.value, currentAccountPubKey);
+    AssetsUtils.linkedNamespaceToAssetMultiSig(cosigner.value, walletPassword.value, assetId, selectNamespace.value, selectAction.value, selectedAccAdd.value);
   } else {
     AssetsUtils.linkedNamespaceToAsset(selectedAccAdd.value, walletPassword.value, assetId, selectNamespace.value, selectAction.value);
   }

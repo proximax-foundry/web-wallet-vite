@@ -119,7 +119,6 @@ export class MultisigUtils {
     numApproveTransaction: number,
     numDeleteUser: number,
     accountToConvertName: string,
-    accountPublicKey: string,
     walletPassword: string
   ): Promise<boolean> {
     const wallet = walletState.currentLoggedInWallet;
@@ -222,8 +221,7 @@ export class MultisigUtils {
     );
     TransactionUtils.announceLF_AND_addAutoAnnounceABT(
       lockFundsTransactionSigned,
-      signedAggregateBondedTransaction,
-      accountPublicKey
+      signedAggregateBondedTransaction
     );
 
     return verify;
@@ -526,8 +524,7 @@ export class MultisigUtils {
     );
     TransactionUtils.announceLF_AND_addAutoAnnounceABT(
       lockFundsTransactionSigned,
-      signedAggregateBondedTransaction,
-      multisigAccount.publicKey
+      signedAggregateBondedTransaction
     );
 
     return true;

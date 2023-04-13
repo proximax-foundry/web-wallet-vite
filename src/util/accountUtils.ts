@@ -393,8 +393,7 @@ export class AccountUtils {
       );
       TransactionUtils.announceLF_AND_addAutoAnnounceABT(
         lockFundsTransactionSigned,
-        signedAggregateBondedTransaction,
-        multisigAccount.publicKey
+        signedAggregateBondedTransaction
       );
     }
     return true;
@@ -470,8 +469,7 @@ export class AccountUtils {
     );
     TransactionUtils.announceLF_AND_addAutoAnnounceABT(
       lockFundsTransactionSigned,
-      signedAggregateBondedTransaction,
-      multisigAccount.publicKey
+      signedAggregateBondedTransaction
     );
     return true;
   };

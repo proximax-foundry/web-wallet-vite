@@ -349,7 +349,7 @@ const convertAccount = async () => {
   if (!acc.value) {
     return
   }
-  let convertstatus = await MultisigUtils.convertAccount(coSign.value, numApproveTransaction.value, numDeleteUser.value, acc.value.name, acc.value.publicKey, passwd.value);
+  let convertstatus = await MultisigUtils.convertAccount(coSign.value, numApproveTransaction.value, numDeleteUser.value, acc.value.name, passwd.value);
   if (!convertstatus) {
     err.value = t('general.walletPasswordInvalid', { name: walletState.currentLoggedInWallet?.name });
   } else {

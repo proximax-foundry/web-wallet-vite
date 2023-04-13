@@ -739,11 +739,11 @@ const doAutoAnnounce = async () => {
     if (letAnnouce) {
       if (currentAutoAnnounceTx.type === AnnounceType.NORMAL) {
         await AppState.chainAPI.transactionAPI.announce(
-          currentAutoAnnounceTx.signedTransaction, currentAutoAnnounceTx.accPublicKey
+          currentAutoAnnounceTx.signedTransaction
         );
       } else {
         await AppState.chainAPI.transactionAPI.announceAggregateBonded(
-          currentAutoAnnounceTx.signedTransaction, currentAutoAnnounceTx.accPublicKey
+          currentAutoAnnounceTx.signedTransaction
         );
       }
 
